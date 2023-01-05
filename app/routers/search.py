@@ -21,7 +21,7 @@ async def find(
 
 
 @router.get("/comics/{comic_id}")
-async def find_characters(
+async def find_comics(
     comic_id: int,
     client: MarvelApiClient = Depends(MarvelApiClient),
 ):
