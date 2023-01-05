@@ -27,5 +27,5 @@ async def find_characters(
 ):
     response = await client.get_comic_by_id(comic_id)
     if not response:
-        return JSONResponse({"message": "Not Found"})
+        return JSONResponse({"message": "Not Found"}, 404)
     return response
