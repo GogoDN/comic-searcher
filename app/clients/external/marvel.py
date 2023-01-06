@@ -19,7 +19,7 @@ class MarvelApiClient:
         self.base_url = "https://gateway.marvel.com/v1/public"
         self.public_key = settings.marvel_public_key
         self.private_key = settings.marvel_private_key
-        self.client = httpx.AsyncClient()
+        self.client = httpx.AsyncClient(timeout=15.0)
 
     def __get_mandatory_params(self) -> dict:
         now = datetime.now()
@@ -124,9 +124,7 @@ class MarvelApiClient:
     async def get_comic_by_id(self, comic_id: int):
         url = self.base_url + f"/comics/{comic_id}"
         request_params = self.__get_mandatory_params()
-        response = await self.client.get(
-            url=url, params=request_params, timeout=10.0
-        )
+        response = await self.client.get(url=url, params=request_params)
         data = response.json().get("data")
 
         if data:
