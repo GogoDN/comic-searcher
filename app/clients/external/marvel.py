@@ -54,12 +54,17 @@ class MarvelApiClient:
                 for date in comic.get("dates")
                 if date.get("type") == "onsaleDate"
             ][0]
+            characters = [
+                character.get("name")
+                for character in comic.get("characters").get("items")
+            ]
             output.append(
                 {
                     "id": comic.get("id"),
                     "title": comic.get("title"),
                     "image": comic.get("thumbnail").get("path"),
                     "onSaleDate": on_sale_date.get("date"),
+                    "characters": characters,
                 }
             )
         return output
