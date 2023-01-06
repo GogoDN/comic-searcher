@@ -119,7 +119,9 @@ class MarvelApiClient:
     async def get_comic_by_id(self, comic_id: int):
         url = self.base_url + f"/comics/{comic_id}"
         request_params = self.__get_mandatory_params()
-        response = await self.client.get(url=url, params=request_params)
+        response = await self.client.get(
+            url=url, params=request_params, timeout=10.0
+        )
         data = response.json().get("data")
 
         if data:
