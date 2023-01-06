@@ -1,6 +1,6 @@
-import httpx
 import hashlib
 import math
+import requests
 
 from fastapi import HTTPException
 
@@ -19,7 +19,7 @@ class MarvelApiClient:
         self.base_url = "https://gateway.marvel.com/v1/public"
         self.public_key = settings.marvel_public_key
         self.private_key = settings.marvel_private_key
-        self.client = httpx.AsyncClient(timeout=15.0)
+        self.client = requests
 
     def __get_mandatory_params(self) -> dict:
         now = datetime.now()
@@ -91,9 +91,9 @@ class MarvelApiClient:
             self.base_url + "/characters",
         )
 
-    async def __perform_get(self, url, params):
+    def __perform_get(self, url, params):
         try:
-            response = await self.client.get(url=url, params=params)
+            response = self.client.get(url=url, params=params)
         except Exception:
             raise HTTPException(
                 503, detail="Communication with external resources unavailable"
@@ -101,7 +101,7 @@ class MarvelApiClient:
 
         return response
 
-    async def get_data(self, params: dict):
+    def get_data(self, params: dict):
         (
             allowed_params,
             key,
@@ -112,7 +112,7 @@ class MarvelApiClient:
         request_params.update(
             self.__get_category_params(params, allowed_params)
         )
-        response = await self.__perform_get(url, request_params)
+        response = self.__perform_get(url, request_params)
         data = response.json().get("data")
         output = {
             "totalPages": math.ceil(data.get("total") / params.get("limit")),
@@ -121,10 +121,10 @@ class MarvelApiClient:
         }
         return output
 
-    async def get_comic_by_id(self, comic_id: int):
+    def get_comic_by_id(self, comic_id: int):
         url = self.base_url + f"/comics/{comic_id}"
         request_params = self.__get_mandatory_params()
-        response = await self.client.get(url=url, params=request_params)
+        response = self.client.get(url=url, params=request_params)
         data = response.json().get("data")
 
         if data:

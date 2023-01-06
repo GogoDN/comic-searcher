@@ -13,19 +13,19 @@ router = APIRouter(
 
 
 @router.get("/")
-async def find(
+def find(
     query_params: CommonQueryParams = Depends(CommonQueryParams),
     client: MarvelApiClient = Depends(MarvelApiClient),
 ):
-    return await client.get_data(query_params.get_params())
+    return client.get_data(query_params.get_params())
 
 
 @router.get("/comics/{comic_id}")
-async def find_comics(
+def find_comics(
     comic_id: int,
     client: MarvelApiClient = Depends(MarvelApiClient),
 ):
-    response = await client.get_comic_by_id(comic_id)
+    response = client.get_comic_by_id(comic_id)
     if not response:
         return JSONResponse({"message": "Not Found"}, 404)
     return response
